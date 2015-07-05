@@ -1,6 +1,9 @@
 package test;
 
 import capacita.DenseLinkedList;
+import functional.Lambdas.VarArgLambda;
+import functional.Tuple;
+import functional.TupleCell.EmptyCell;
 
 /**
  * Tests for custom data structures.
@@ -33,6 +36,37 @@ public class DataTests extends TestGroup {
                     }
                     return cq.convertToReversedString().equals(
                                    "CharLinkedList[\"" + forwards + "\"]");
+                }
+            },
+            new TestGroup("tuple") {
+                @Override
+                protected boolean mainTest() {
+                    Tuple<String, Tuple<Integer, EmptyCell>> x;
+                    x = Tuple.cons("hello", Tuple.cons(15));
+                    return x.cdr().car() == 15;
+                }
+            },
+            new TestGroup("lambdas") {
+                @Override
+                protected boolean mainTest() {
+                    VarArgLambda<Double, Tuple<String, Tuple<Boolean,
+                                 Tuple<Double, EmptyCell>>>> lmbda;
+                    lmbda = new VarArgLambda<Double, Tuple<String,
+                                Tuple<Boolean, Tuple<Double, EmptyCell>>>>() {
+                        @Override
+                        public Double run(Tuple<String, Tuple<Boolean,
+                                          Tuple<Double, EmptyCell>>> t) {
+                            return t.cdr().cdr().car() + Math.PI;
+                        }
+                    };
+                    Tuple<String, Tuple<Boolean,
+                          Tuple<Double, EmptyCell>>> s;
+                    s = Tuple.cons("a",
+                        Tuple.cons(true,
+                            Tuple.cons(Math.PI)
+                        )
+                    );
+                    return lmbda.run(s) == 2 * Math.PI;
                 }
             }
         };
